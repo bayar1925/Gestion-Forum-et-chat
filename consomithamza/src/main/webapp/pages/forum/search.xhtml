@@ -1,0 +1,48 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+xmlns:f="http://java.sun.com/jsf/core" 
+xmlns:h="http://java.sun.com/jsf/html"
+xmlns:ui="http://java.sun.com/jsf/facelets" 
+xmlns:p="http://primefaces.org/ui"
+template="/template/template.xhtml">
+<ui:param name="page_name" value="Search" />
+<ui:define name="menu">
+<f:metadata>
+        <f:viewParam name="searchValue" value="#{postController.searchValue}" />
+    </f:metadata>
+<h:form id="form">
+<div class="pull-right"> 
+ <a href="http://localhost:8085/forum" class="chat-link">Forum </a>
+<a href="http://localhost:8085/login" class="chat-link" >chat </a>
+ <h:commandButton class="pure-button" value ="Logout" action="#{postController.logOut()}" />
+ 
+  </div>
+<br></br>
+<h:panelGroup columns="2">
+<h:dataTable value="#{searchController.searchByPost(postController.searchValue)}" var="poost" border="1">
+<h:column><f:facet name="header"><h:outputText value="Search Result.." style="color:red" /></f:facet>
+<h:outputText value="#{poost.users.userName}" style="color:blue"/>
+<br></br>
+<h:outputText value="#{poost.title}" />  <h:outputText value="      #{poost.totalPoints}" style="color:gold"/>  <img src="images/etoill.png " alt="" width="15"/>
+<br></br>
+<img src="images/#{poost.picture}" alt="" width="250"/>
+
+<br></br>
+<h:commandButton type="submit" class="btn btn-primary" value="Comments.." action="#{postController.submit(poost.id)}" ></h:commandButton>
+<h:outputText value="#{post.datePost} " />  
+<br></br>
+<h:commandButton id="sup"  action="#{postController.removePost(poost.id)}" class="deleteButton" value="Delete"  rendered="#{postController.testPosted(poost.id) eq true}" />
+<!-- <h:link outcome="/pages/forum/comment" value="Comments"></h:link>  -->
+</h:column>
+<h:column >
+<f:facet name="header"><h:outputText value="Rating" style="color:red" /></f:facet>
+<h:outputText value="#{postController.RateParUser(userId,poost.id)}/4" style="font-size:20px" rendered="#{postController.testPosted(poost.id) eq false}"/>
+<br></br>
+<h:commandButton  class="input-rating" action="#{postController.addRating0(userId,poost.id,rate)}" value="0" rendered="#{postController.testPosted(poost.id) eq false}"></h:commandButton>
+<h:commandButton class="input-rating" action="#{postController.addRating1(userId,poost.id,rate)}" value="1" rendered="#{postController.testPosted(poost.id) eq false}"></h:commandButton>
+<h:commandButton class="input-rating" action="#{postController.addRating2(userId,poost.id,rate)}" value="2" rendered="#{postController.testPosted(poost.id) eq false}"></h:commandButton>
+<h:commandButton class="input-rating" action="#{postController.addRating3(userId,poost.id,rate)}" value="3" rendered="#{postController.testPosted(poost.id) eq false}"></h:commandButton>
+<h:commandButton class="input-rating" action="#{postController.addRating4(userId,poost.id,rate)}" value="4" rendered="#{postController.testPosted(poost.id) eq false}"></h:commandButton>
+
+</h:column></h:dataTable></h:panelGroup></h:form></ui:define></ui:composition>

@@ -1,0 +1,114 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+xmlns:f="http://java.sun.com/jsf/core" 
+xmlns:h="http://java.sun.com/jsf/html"
+xmlns:ui="http://java.sun.com/jsf/facelets" 
+xmlns:p="http://primefaces.org/ui"
+template="/template/template.xhtml">
+<ui:param name="page_name" value="Forum" />
+<ui:define name="menu">
+<!-- BEGIN : TP1 JSF Introduction Login -->
+
+<h:form enctype="multipart/form-data" id="form"> 
+<div class="pull-right"> 
+
+<a href="http://localhost:8085/login" class="chat-link">chat </a>
+ <h:commandButton class="pure-button" value ="Logout" action="#{postController.logOut()}" />
+ 
+  </div>
+
+            
+            <p:panelGrid columns="2">
+                <h:outputLabel for="image" value="Select Image: *" />
+                <p:fileUpload class="btn btn-default" value="#{uploadImage.file}" mode="simple" allowTypes="/(\.|\/)(gif|jpe?g|png)$/"/> 
+                <f:facet name="footer">
+                    <p:commandButton styleClass="ui-confirmdialog-yes" value="Submit" ajax="false" 
+                                     actionListener="#{uploadImage.upload}"/></f:facet>
+            </p:panelGrid>
+            
+<h:panelGroup columns="2">
+<table>
+<tr><td>
+<div class="posttext pull-left">
+    <div class="textwraper">
+        <div class="postreply">New Post</div>
+           <p:inputTextarea  placeholder="write here ..." autoResize="true" value="#{postController.title}" />
+	</div>
+ 		</div>
+</td></tr>
+<tr><td colspan="2"> <h:commandButton id="btn" value="Add Post" class="btn btn-primary" action="#{postController.addPost(idUser)}" />
+<h:commandButton  value="Update Post" class="btn btn-primary" action="#{postController.updatePost()}" />
+
+</td></tr>
+
+</table>
+<p:messages showDetail="true"/> 
+<br></br>
+ 
+
+
+<div class="pull-right"> 
+<div class="col-lg-4 search hidden-xs hidden-sm col-md-3">
+<div class="wrap">
+ <div class="pull-left txt"> <p:inputText styleClass="form-control" placeholder="Search" value="#{postController.searchValue}" ></p:inputText></div>
+  <div class="pull-right"><h:commandButton value="search" id="ajax"  action="#{postController.recherche(postController.searchValue)}"  class="fa fa-search">
+  </h:commandButton>
+                                        </div>
+                                   <div class="clearfix"></div>
+                            </div>  </div>
+
+<h:dataTable value="#{postController.bestPost}" var="poost" border="1">
+<h:column><f:facet name="header"><h:outputText value="Our Best Posts" style="color:red" /></f:facet>
+<h:outputText value="#{poost.users.userName}" style="color:blue"/>
+<br></br>
+<h:outputText value="#{poost.title}" />  <h:outputText value="      #{poost.totalPoints}" style="color:gold"/>  <img src="images/etoill.png " alt="" width="15"/>
+<br></br>
+<img src="images/#{poost.picture}" alt="" width="300"/>
+<br></br>
+<h:outputText value="#{poost.datePost}" /> 
+<br></br></h:column></h:dataTable></div>
+</h:panelGroup> 
+ 
+<!-- ************************************************************************************************ -->
+<h:panelGroup columns="2">
+<br></br>
+ 
+ 
+<h:dataTable value="#{postController.posts}" var="post" border="1">
+<h:column><f:facet name="header"><h:outputText value="  Posts " style="color:red"  /> </f:facet>
+<h:outputText value="#{post.users.userName}" style="color:blue"/>
+<br></br>
+<h:outputText value="  #{post.title}" />  <h:outputText value="      #{post.totalPoints}" style="color:gold"/>  <img src="images/etoill.png " alt="" width="15"/>
+<br></br>
+<img src="images/#{post.picture}" alt="" width="250"/>
+<br></br>
+
+<h:commandButton type="submit" class="btn btn-primary" value="Comments.." action="#{postController.submit(post.id)}" ></h:commandButton>
+<h:outputText value="#{post.datePost} " />  
+<br></br>
+<h:commandButton id="sup"  action="#{postController.removePost(post.id)}" class="deleteButton" value="Delete"  rendered="#{postController.testPosted(post.id) eq true}" />
+<!-- <h:link outcome="/pages/forum/comment" value="Comments"></h:link>  -->
+<h:commandButton class="pure-button" value ="Edit" action="#{postController.displayPost(post)}" rendered="#{postController.testPosted(post.id) eq true}" /> 
+</h:column>
+<h:column >
+
+<f:facet name="header"><h:outputText value="Rating" style="color:red" /></f:facet>
+
+<h:outputText value="#{postController.RateParUser(userId,post.id)}/4" style="font-size:20px" rendered="#{postController.testPosted(post.id) eq false}"/>
+<br></br>
+
+<h:commandButton  class="input-rating" action="#{postController.addRating0(userId,post.id,rate)}" value="0" rendered="#{postController.testPosted(post.id) eq false}"></h:commandButton>
+<h:commandButton class="input-rating" action="#{postController.addRating1(userId,post.id,rate)}" value="1" rendered="#{postController.testPosted(post.id) eq false}"></h:commandButton>
+<h:commandButton class="input-rating" action="#{postController.addRating2(userId,post.id,rate)}" value="2" rendered="#{postController.testPosted(post.id) eq false}"></h:commandButton>
+<h:commandButton class="input-rating" action="#{postController.addRating3(userId,post.id,rate)}" value="3" rendered="#{postController.testPosted(post.id) eq false}"></h:commandButton>
+<h:commandButton class="input-rating" action="#{postController.addRating4(userId,post.id,rate)}" value="4" rendered="#{postController.testPosted(post.id) eq false}"></h:commandButton>
+</h:column>
+</h:dataTable>
+
+</h:panelGroup>
+</h:form>
+ 
+ 
+</ui:define>
+</ui:composition>
